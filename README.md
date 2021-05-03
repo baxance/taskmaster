@@ -18,3 +18,9 @@ View Task page with a button to return to the Home Page and a big block of purpl
 
 4/29 hard coded event buttons from home page route here with their task name and filler text
 ![View tasks](screenshots/view_task.PNG)
+
+5/3 homepage with hardcoded recycler view displaying hardcoded task data
+![View tasks](screenshots/home3.PNG)
+
+5/3 Task detail page, accessed on-click from tasks on home page
+![View tasks](screenshots/detail.PNG)
