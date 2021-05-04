@@ -24,7 +24,7 @@ public class Settings extends AppCompatActivity {
         ((TextView)findViewById(R.id.submitText)).setText(username);
 
         findViewById(R.id.submitUsernameButton).setOnClickListener(view -> {
-            String setUsername = ((TextView)findViewById(R.id.editTextTextPersonName)).getText().toString();
+            String setUsername = ((TextView)findViewById(R.id.editTextTaskTitle)).getText().toString();
 
             preferencesEditor.putString("username", setUsername);
             preferencesEditor.apply();

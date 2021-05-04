@@ -1,10 +1,22 @@
 package com.baxance.taskmaster;
 
-public class Task {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-    private String title;
-    private String body;
-    private String state;
+@Entity
+public class Task {
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
+    @ColumnInfo(name = "title")
+    public String title;
+
+    @ColumnInfo(name = "body")
+    public String body;
+
+    @ColumnInfo(name = "state")
+    public String state;
 
     public Task(String title, String body, String state) {
         this.title = title;

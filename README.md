@@ -24,3 +24,12 @@ View Task page with a button to return to the Home Page and a big block of purpl
 
 5/3 Task detail page, accessed on-click from tasks on home page
 ![View tasks](screenshots/detail.PNG)
+
+5/3 add task page
+![View tasks](screenshots/add_task.PNG)
+
+5/3 home page, task names from DB populating
+![View tasks](screenshots/home4.PNG)
+
+5/3 task detail page, accessed on click from tasks on home page, data populated from db
+![View tasks](screenshots/view_task2.PNG)
