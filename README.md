@@ -33,3 +33,8 @@ View Task page with a button to return to the Home Page and a big block of purpl
 
 5/3 task detail page, accessed on click from tasks on home page, data populated from db
 ![View tasks](screenshots/view_task2.PNG)
+
+5/4 Espresso tests built
+- first checks for UI elements on home page
+- second simulates adding a new task, selecting it from the home page and checking that the contents on the details page match what was entered
+- third creates a new username and checks that it is displayed properly on the home page 
