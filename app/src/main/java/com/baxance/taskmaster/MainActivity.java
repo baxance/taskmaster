@@ -15,6 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amplifyframework.AmplifyException;
+import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.api.graphql.model.ModelMutation;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.TaskTwo;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -24,12 +30,20 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
     public ArrayList<Task> taskList = new ArrayList<>();
     RecyclerView taskRV;
 
-    TaskDatabase taskDatabase;
+//    TaskDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.configure(getApplicationContext());
+            Log.i("amplify.app","success");
+        } catch (AmplifyException e) {
+            Log.e("amplify.app", "error " + e);
+        }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String username = preferences.getString("username", "Guest");
@@ -37,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         TextView usernameSet = findViewById(R.id.usernameText);
         usernameSet.setText(username + " tasks");
 
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
-        ArrayList<Task> tasks = (ArrayList<Task>)taskDatabase.taskDao().getAllTasks();
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
+        ArrayList<Task> tasks = new ArrayList<>();
 //        Log.i("tasks", "task from db " + tasks.get(0).getTitle());
 
         Button topTile = findViewById(R.id.vacuumButton);
@@ -52,13 +66,19 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             }
         });
 
-        Task task1 = new Task("title 1", "body 1", "STATE");
-        Task task2 = new Task("title 2", "body 2", "STATE");
-        Task task3 = new Task("title 3", "body 3", "STATE");
-
-        taskList.add(task1);
-        taskList.add(task2);
-        taskList.add(task3);
+//        TaskTwo taskTwo = TaskTwo.builder()
+//                .title("test")
+//                .body("test description")
+//                .state("test state")
+//                .build();
+//
+//        Log.e("tasktwo", "tt body = " + taskTwo.getBody());
+//
+//        Amplify.API.mutate(
+//                ModelMutation.create(taskTwo),
+//                response -> Log.i("mutate", "success"),
+//                error -> Log.e("mutate", "error " + error)
+//        );
 
         Button midTile = findViewById(R.id.dishesButton);
         midTile.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +142,9 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         String taskTitle = task.getTitle();
         String taskBody = task.getBody();
         String taskState = task.getState();
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
-        ArrayList<Task> tasks = (ArrayList<Task>)taskDatabase.taskDao().getTask(taskTitle);
-        Log.i("task from DB", "task from DB on click = " + tasks);
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
+//        ArrayList<Task> tasks = (ArrayList<Task>)taskDatabase.taskDao().getTask(taskTitle);
+//        Log.i("task from DB", "task from DB on click = " + tasks);
         Intent viewTaskDetail = new Intent(MainActivity.this, TaskDetail.class);
         viewTaskDetail.putExtra("taskTitle", taskTitle);
         viewTaskDetail.putExtra("taskBody", taskBody);

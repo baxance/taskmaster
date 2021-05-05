@@ -10,16 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amplifyframework.api.graphql.model.ModelMutation;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.TaskTwo;
+
 public class AddTask extends AppCompatActivity {
 
-    TaskDatabase taskDatabase;
+//    TaskDatabase taskDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
 
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
@@ -34,9 +38,40 @@ public class AddTask extends AppCompatActivity {
             TextView textBody = AddTask.this.findViewById(R.id.editTextTaskBody);
             TextView textState = AddTask.this.findViewById(R.id.editTextTaskState);
 
-            Task task = new Task(textTitle.getText().toString(), textBody.getText().toString(), textState.getText().toString());
-            taskDatabase.taskDao().insert(task);
+//            TaskTwo task = new TaskTwo(textTitle.getText().toString(),
+//                    textBody.getText().toString(),
+//                    textState.getText().toString());
+//            TaskTwo task = new TaskTwo()
+//            taskDatabase.taskDao().insert(task);
+////////////////////////////////////////////////////////////////////////////////////////////////////
+            TaskTwo taskTwo = TaskTwo.builder()
+                    .title(textTitle.toString())
+                    .body(textBody.toString())
+                    .state(textState.toString())
+                    .build();
 
+            Log.e("tasktwo", "tt body = " + taskTwo.getBody());
+
+            Amplify.API.mutate(
+                    ModelMutation.create(taskTwo),
+                    response -> Log.i("mutate", "success"),
+                    error -> Log.e("mutate", "error " + error)
+            );
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//            TaskTwo taskTwo = TaskTwo.builder()
+//                    .title("test")
+//                    .body("test description")
+//                    .state("test state")
+//                    .build();
+//
+//            Log.e("tasktwo", "tt body = " + taskTwo.getBody());
+//
+//            Amplify.API.mutate(
+//                    ModelMutation.create(taskTwo),
+//                    response -> Log.i("mutate", "success"),
+//                    error -> Log.e("mutate", "error " + error)
+//            );
+////////////////////////////////////////////////////////////////////////////////////////////////////
             Log.i("title", "title= " + textTitle.getText().toString());
             Log.i("body", "body= " + textBody.getText().toString());
             Log.i("state", "state= " + textState.getText().toString());
