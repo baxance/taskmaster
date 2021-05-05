@@ -1,5 +1,6 @@
-type Todo @model {
+type TaskTwo @model{
   id: ID!
-  name: String!
-  description: String
+  title: String!
+  body: String
+  state: String
 }

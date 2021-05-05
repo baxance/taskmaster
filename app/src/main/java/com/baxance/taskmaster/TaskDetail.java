@@ -11,21 +11,23 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amplifyframework.datastore.generated.model.TaskTwo;
+
 import java.util.ArrayList;
 
 public class TaskDetail extends AppCompatActivity {
     private static final String TAG = "taskdetail";
 
-    public ArrayList<Task> taskList = new ArrayList<>();
+    public ArrayList<TaskTwo> taskList = new ArrayList<>();
     RecyclerView taskRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
-        TaskDatabase taskDatabase;
+//        TaskDatabase taskDatabase;
 //
-        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
+//        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
 
 
         Intent intent = getIntent();
