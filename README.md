@@ -38,3 +38,8 @@ View Task page with a button to return to the Home Page and a big block of purpl
 - first checks for UI elements on home page
 - second simulates adding a new task, selecting it from the home page and checking that the contents on the details page match what was entered
 - third creates a new username and checks that it is displayed properly on the home page 
+
+5/5 database replaced with AWS Ampligy + DynamoDB
+- Add task page form adds task to DynamoDB database
+- RecyclerView refactored to display tasks from DynamoDB on the home page
+- Tasks remain clickable, and route user to details page

@@ -11,12 +11,14 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amplifyframework.datastore.generated.model.TaskTwo;
+
 import java.util.ArrayList;
 
 public class TaskDetail extends AppCompatActivity {
     private static final String TAG = "taskdetail";
 
-    public ArrayList<Task> taskList = new ArrayList<>();
+    public ArrayList<TaskTwo> taskList = new ArrayList<>();
     RecyclerView taskRV;
 
     @Override

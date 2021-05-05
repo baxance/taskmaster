@@ -8,13 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.TaskTwo;
+
 import java.util.ArrayList;
 
 public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TaskViewHolder> {
-    public ArrayList<Task> taskList;
+    public ArrayList<TaskTwo> taskList;
     public TaskListener taskListener;
 
-    public ViewAdapter(ArrayList<Task> taskList, TaskListener taskListener) {
+    public ViewAdapter(ArrayList<TaskTwo> taskList, TaskListener taskListener) {
         this.taskList = taskList;
         this.taskListener = taskListener;
     }
@@ -31,13 +33,19 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TaskViewHolder
             taskListener.tListener(taskViewHolder.task);
         });
 
+//        TaskViewHolder taskViewHolder = new TaskViewHolder(view);
+
         return taskViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewAdapter.TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         holder.task = taskList.get(position);
 
+//        ((TextView) holder.itemView.findViewById(R.id.taskTitle)).setText(holder.task.getTitle());
+//        ((TextView) holder.itemView.findViewById(R.id.taskBody)).setText(holder.task.getBody());
+//        ((TextView) holder.itemView.findViewById(R.id.taskState)).setText(holder.task.getState());
+//
         TextView titleText = holder.itemView.findViewById(R.id.taskTitle);
         titleText.setText(holder.task.getTitle());
     }
@@ -51,11 +59,11 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TaskViewHolder
     }
 
     public interface TaskListener {
-        void tListener(Task task);
+        void tListener(TaskTwo task);
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        public Task task;
+        public TaskTwo task;
         public View itemView;
 
         public TaskViewHolder(@NonNull View taskView){
