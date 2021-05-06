@@ -17,7 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle"
+        app:layout_constraintVertical_bias="0.083" />
 
     <EditText
         android:id="@+id/editTextTaskBody"
@@ -33,7 +34,7 @@
         app:layout_constraintHorizontal_bias="0.738"
         app:layout_constraintStart_toEndOf="@+id/editTextTaskTitle"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.307" />
+        app:layout_constraintVertical_bias="0.12" />
 
     <Button
         android:id="@+id/homeButton"
@@ -42,18 +43,20 @@
         android:text="Home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.894" />
 
     <Button
         android:id="@+id/addTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="424dp"
+        android:layout_marginBottom="152dp"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -79,7 +82,39 @@
         app:layout_constraintEnd_toStartOf="@+id/editTextTaskBody"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.307" />
+        app:layout_constraintVertical_bias="0.12" />
+
+    <RadioGroup
+        android:id="@+id/teamSelection"
+        android:layout_width="136dp"
+        android:layout_height="141dp"
+        app:layout_constraintBottom_toTopOf="@+id/addTaskButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskState"
+        app:layout_constraintVertical_bias="0.131">
+
+        <RadioButton
+            android:id="@+id/redTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Red Team" />
+
+        <RadioButton
+            android:id="@+id/greenTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Green Team" />
+
+        <RadioButton
+            android:id="@+id/blueTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Blue Team"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </RadioGroup>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

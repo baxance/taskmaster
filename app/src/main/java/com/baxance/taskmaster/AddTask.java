@@ -8,11 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
+import com.amplifyframework.datastore.generated.model.Team;
+
+import java.util.StringJoiner;
 
 public class AddTask extends AppCompatActivity {
 
@@ -37,9 +41,11 @@ public class AddTask extends AppCompatActivity {
             String textTitle = ((EditText) findViewById(R.id.editTextTaskTitle)).getText().toString();
             String textBody = ((EditText) findViewById(R.id.editTextTaskBody)).getText().toString();
             String textState = ((EditText) findViewById(R.id.editTextTaskState)).getText().toString();
+            int textTeam = ((RadioGroup) findViewById(R.id.teamSelection)).getCheckedRadioButtonId();
 
             TaskTwo taskTwo = TaskTwo.builder()
                     .title(textTitle)
+                    .team(textTeam)
                     .body(textBody)
                     .state(textState)
                     .build();
