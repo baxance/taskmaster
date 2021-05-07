@@ -6,6 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".Settings">
 
+    <RadioGroup
+        android:id="@+id/teamSelection"
+        android:layout_width="136dp"
+        android:layout_height="141dp"
+        app:layout_constraintBottom_toTopOf="@+id/homeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle">
+
+        <RadioButton
+            android:id="@+id/redTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Red Team" />
+
+        <RadioButton
+            android:id="@+id/greenTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Green Team" />
+
+        <RadioButton
+            android:id="@+id/blueTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Blue Team"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </RadioGroup>
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -34,26 +64,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginBottom="380dp"
+        android:layout_marginTop="256dp"
         android:text="Home"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/submitUsernameButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle" />
 
     <Button
         android:id="@+id/submitUsernameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="256dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="380dp"
         android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle" />
 
     <TextView
         android:id="@+id/submitText"
@@ -63,6 +89,8 @@
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/submitUsernameButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTaskTitle"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

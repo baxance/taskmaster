@@ -1,5 +1,8 @@
 package com.baxance.taskmaster;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +45,14 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         holder.task = taskList.get(position);
 
-//        ((TextView) holder.itemView.findViewById(R.id.taskTitle)).setText(holder.task.getTitle());
-//        ((TextView) holder.itemView.findViewById(R.id.taskBody)).setText(holder.task.getBody());
-//        ((TextView) holder.itemView.findViewById(R.id.taskState)).setText(holder.task.getState());
-//
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences();
+        String username = preferences.getString("username", "Guest");
+        String userTeam = preferences.getString("userTeam", "");
+
         TextView titleText = holder.itemView.findViewById(R.id.taskTitle);
         titleText.setText(holder.task.getTitle());
+        TextView teamText = holder.itemView.findViewById(R.id.taskTeam);
+        teamText.setText(holder.task.getTeam().getName());
     }
 
     @Override
