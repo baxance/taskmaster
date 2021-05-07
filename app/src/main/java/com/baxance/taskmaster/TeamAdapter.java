@@ -53,5 +53,4 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     public int getItemCount() {
         return  teamList.size();
     }
-    }
 }

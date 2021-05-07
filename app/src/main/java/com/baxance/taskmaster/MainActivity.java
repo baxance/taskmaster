@@ -27,6 +27,7 @@ import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
+import com.amplifyframework.datastore.generated.model.Team;
 
 import org.w3c.dom.Text;
 
@@ -44,11 +45,45 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try {
+            Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.configure(getApplicationContext());
+            Log.i("amplify.app","success");
+        } catch (AmplifyException e) {
+            Log.e("amplify.app", "error " + e);
+        }
+
+//        Team redTeam = Team.builder()
+//                .name("red team")
+//                .build();
+//        Amplify.API.mutate(
+//                ModelMutation.create(redTeam),
+//                response -> Log.i("mutate", "success"),
+//                error -> Log.e("mutate", "error " + error)
+//        );
+//        Team greenTeam = Team.builder()
+//                .name("green team")
+//                .build();
+//        Amplify.API.mutate(
+//                ModelMutation.create(greenTeam),
+//                response -> Log.i("mutate", "success"),
+//                error -> Log.e("mutate", "error " + error)
+//        );
+//        Team blueTeam = Team.builder()
+//                .name("blue team")
+//                .build();
+//        Amplify.API.mutate(
+//                ModelMutation.create(blueTeam),
+//                response -> Log.i("mutate", "success"),
+//                error -> Log.e("mutate", "error " + error)
+//        );
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String username = preferences.getString("username", "Guest");
+        String userTeam = preferences.getString("userTeam", "");
 
         TextView usernameSet = findViewById(R.id.usernameText);
-        usernameSet.setText(username + " tasks");
+        usernameSet.setText(username + " tasks with " + userTeam);
 
 //        tasks.add(new TaskTwo("test ID", "test TITLE", "test BODY", "test STATE"));
 //        Log.i("tasks", "task from db " + tasks.get(0).getTitle());
@@ -77,14 +112,6 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                 }
             }
         };
-
-        try {
-            Amplify.addPlugin(new AWSApiPlugin());
-            Amplify.configure(getApplicationContext());
-            Log.i("amplify.app","success");
-        } catch (AmplifyException e) {
-            Log.e("amplify.app", "error " + e);
-        }
 
         Amplify.API.query(
                 ModelQuery.list(TaskTwo.class),
