@@ -23,23 +23,10 @@ public class Settings extends AppCompatActivity {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
 
         String username = preferences.getString("username", "Guest");
-//        String userTeam = preferences.getString("userTeam", "none");
 
         ((TextView)findViewById(R.id.submitText)).setText(username);
 
-//        RadioGroup teamSelect = findViewById(R.id.teamSelection);
-//        String teamName = "";
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.redTeam) { // selected team = red team
-//            teamName = "Red Team";
-//        }
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.greenTeam) {
-//            teamName = "Green Team";
-//        }
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.blueTeam) {
-//            teamName = "Blue Team";
-//        }
 
-//        String finalTeamName = teamName;
         findViewById(R.id.submitUsernameButton).setOnClickListener(view -> {
             String setUsername = ((TextView)findViewById(R.id.editTextTaskTitle)).getText().toString();
             String setTeamName = "";
