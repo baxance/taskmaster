@@ -46,42 +46,41 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
 
     public static String TAG = "main activity";
 
-    void signupCognito(){
-        Amplify.Auth.signUp(
-                "banance7@gmail.com",
-                "password",
-                AuthSignUpOptions.builder()
-                        .userAttribute(AuthUserAttributeKey.email(),"banance7@gmail.com")
-                        .userAttribute(AuthUserAttributeKey.nickname(), "barrett")
-                        .build(),
-                r -> Log.i(TAG, "signup success " + r.toString()),
-                r -> Log.i(TAG, "signup fail " + r.toString())
-        );
-    }
-
-    void signupConfirm(String username, String confNum){
-        Amplify.Auth.confirmSignUp(
-                username,
-                confNum,
-                r -> Log.i(TAG, "signupConfirm: " + r.toString()),
-                r -> Log.i(TAG, "signupConfirm: " + r.toString())
-        );
-    }
-
-    void loginCognito(String username, String password) {
-        Amplify.Auth.signIn(
-                username,
-                password,
-                r -> Log.i(TAG, "loginCognito success: " + r.toString()),
-                r -> Log.i(TAG, "loginCognito failure: " + r.toString())
-        );
-    }
+//    void signupCognito(){
+//        Amplify.Auth.signUp(
+//                "banance7@gmail.com",
+//                "password",
+//                AuthSignUpOptions.builder()
+//                        .userAttribute(AuthUserAttributeKey.email(),"banance7@gmail.com")
+//                        .userAttribute(AuthUserAttributeKey.nickname(), "barrett")
+//                        .build(),
+//                r -> Log.i(TAG, "signup success " + r.toString()),
+//                r -> Log.i(TAG, "signup fail " + r.toString())
+//        );
+//    }
+//
+//    void signupConfirm(String username, String confNum){
+//        Amplify.Auth.confirmSignUp(
+//                username,
+//                confNum,
+//                r -> Log.i(TAG, "signupConfirm: " + r.toString()),
+//                r -> Log.i(TAG, "signupConfirm: " + r.toString())
+//        );
+//    }
+//
+//    void loginCognito(String username, String password) {
+//        Amplify.Auth.signIn(
+//                username,
+//                password,
+//                r -> Log.i(TAG, "loginCognito success: " + r.toString()),
+//                r -> Log.i(TAG, "loginCognito failure: " + r.toString())
+//        );
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         try {
             Amplify.addPlugin(new AWSApiPlugin());
@@ -92,19 +91,19 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             Log.e("amplify.app", "error " + e);
         }
 
-        AuthUser authUser = Amplify.Auth.getCurrentUser();
 
         Amplify.Auth.fetchAuthSession(
                 result -> Log.i("AmplifyQuickstart", result.toString()),
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = preferences.getString("username", "Guest");
-        String userTeam = preferences.getString("userTeam", "");
 
-        TextView usernameSet = findViewById(R.id.usernameText);
-        usernameSet.setText(username + " tasks with " + userTeam);
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String username = preferences.getString("username", "Guest");
+//        String userTeam = preferences.getString("userTeam", "");
+//
+//        TextView usernameSet = findViewById(R.id.usernameText);
+//        usernameSet.setText(username + " tasks with " + userTeam);
 
         //////////////////////RECYCLER VIEW/////////////////////////////
         taskRV = findViewById(R.id.recyclerView);
@@ -171,6 +170,37 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                 startActivity(goToViewTasksIntent);
             }
         });
+
+        ((Button) findViewById(R.id.signupPageButton)).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CognitoSignupActivity.class);
+            startActivity(intent);
+        });
+
+        ((Button) findViewById(R.id.loginPageButton)).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CognitoLoginActivity.class);
+            startActivity(intent);
+        });
+
+        ((Button) findViewById(R.id.logoutButton)).setOnClickListener(v -> {
+            Amplify.Auth.signOut(
+                    () -> Log.i("Auth", "sign out success"),
+                    error -> Log.e("Auth", error.toString())
+            );
+            finish();
+            startActivity(getIntent());
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("in the onresume");
+        AuthUser authUser = Amplify.Auth.getCurrentUser();
+        if (authUser != null) {
+            String username = authUser.getUsername();
+            ((TextView) findViewById(R.id.usernameText)).setText(username);
+        }
     }
 
     @Override
