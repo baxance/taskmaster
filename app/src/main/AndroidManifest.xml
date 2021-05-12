@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Taskmaster">
+        <activity android:name=".CognitoSignupConfirmationActivity"></activity>
+        <activity android:name=".CognitoSignupActivity" />
+        <activity android:name=".CognitoLoginActivity" />
+        <activity
+            android:name=".ui.login.CognitoLoginActivity"
+            android:label="@string/title_activity_cognito_login" />
         <activity android:name=".Settings" />
         <activity android:name=".TaskDetail" />
         <activity android:name=".AddTask" />

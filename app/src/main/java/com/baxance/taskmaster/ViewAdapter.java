@@ -45,9 +45,9 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         holder.task = taskList.get(position);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences();
-        String username = preferences.getString("username", "Guest");
-        String userTeam = preferences.getString("userTeam", "");
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences();
+//        String username = preferences.getString("username", "Guest");
+//        String userTeam = preferences.getString("userTeam", "");
 
         TextView titleText = holder.itemView.findViewById(R.id.taskTitle);
         titleText.setText(holder.task.getTitle());
