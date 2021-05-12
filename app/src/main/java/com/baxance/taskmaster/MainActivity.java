@@ -25,7 +25,10 @@ import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.auth.AuthUser;
+import com.amplifyframework.auth.AuthUserAttributeKey;
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
+import com.amplifyframework.auth.options.AuthSignUpOptions;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
@@ -41,6 +44,39 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
     Handler mainThreadHandler;
     RecyclerView taskRV;
 
+    public static String TAG = "main activity";
+
+    void signupCognito(){
+        Amplify.Auth.signUp(
+                "banance7@gmail.com",
+                "password",
+                AuthSignUpOptions.builder()
+                        .userAttribute(AuthUserAttributeKey.email(),"banance7@gmail.com")
+                        .userAttribute(AuthUserAttributeKey.nickname(), "barrett")
+                        .build(),
+                r -> Log.i(TAG, "signup success " + r.toString()),
+                r -> Log.i(TAG, "signup fail " + r.toString())
+        );
+    }
+
+    void signupConfirm(String username, String confNum){
+        Amplify.Auth.confirmSignUp(
+                username,
+                confNum,
+                r -> Log.i(TAG, "signupConfirm: " + r.toString()),
+                r -> Log.i(TAG, "signupConfirm: " + r.toString())
+        );
+    }
+
+    void loginCognito(String username, String password) {
+        Amplify.Auth.signIn(
+                username,
+                password,
+                r -> Log.i(TAG, "loginCognito success: " + r.toString()),
+                r -> Log.i(TAG, "loginCognito failure: " + r.toString())
+        );
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
 
         try {
             Amplify.addPlugin(new AWSApiPlugin());
-            Amplify.configure(getApplicationContext());
             Amplify.addPlugin(new AWSCognitoAuthPlugin());
             Amplify.configure(getApplicationContext());
             Log.i("amplify.app","success");
@@ -57,11 +92,12 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             Log.e("amplify.app", "error " + e);
         }
 
+        AuthUser authUser = Amplify.Auth.getCurrentUser();
+
         Amplify.Auth.fetchAuthSession(
                 result -> Log.i("AmplifyQuickstart", result.toString()),
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
-
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String username = preferences.getString("username", "Guest");
