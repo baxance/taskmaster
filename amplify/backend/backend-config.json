@@ -24,5 +24,11 @@
       "dependsOn": [],
       "customAuth": false
     }
+  },
+  "storage": {
+    "S3taskmaster": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }

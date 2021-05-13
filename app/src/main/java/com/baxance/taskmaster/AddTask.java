@@ -6,12 +6,15 @@ import androidx.room.Database;
 import androidx.room.Room;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,12 +25,23 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.StringJoiner;
 
 public class AddTask extends AppCompatActivity {
+
+    static int FILE_UPLOAD_REQUEST_CODE = 123;
+    static int GET_IMAGE_CODE = 100;
+    File fileToUpload;
 
     public ArrayList<Team> teams = new ArrayList<>();
     Handler mainThreadHandler;
@@ -58,21 +72,6 @@ public class AddTask extends AppCompatActivity {
                 },
                 response -> Log.i("retrieving Teams", "retrieved team: " + response.toString())
         );
-
-//        RadioButton redTeamButton = findViewById(R.id.redTeam);
-//        RadioButton greenTeamButton = findViewById(R.id.greenTeam);
-//        RadioButton blueTeamButton = findViewById(R.id.blueTeam);
-
-//        RadioGroup teamSelect = findViewById(R.id.teamSelection);
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.redTeam) { // selected team = red team
-//            String redTeamId = teams.get(1).getId();
-//        }
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.greenTeam) {
-//            String greenTeamId = teams.get(0).getId();
-//        }
-//        if (teamSelect.getCheckedRadioButtonId() == R.id.blueTeam) {
-//            String blueTeamId = teams.get(2).getId();
-//        }
 
         Button addTaskButton = findViewById(R.id.addTaskButton);
         addTaskButton.setOnClickListener(view -> {
@@ -110,5 +109,78 @@ public class AddTask extends AppCompatActivity {
 
             submitText.setText("submitted!");
         });
+
+        ((Button) findViewById(R.id.selectImageButton)).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{".jpg", ".png", ".gif"});
+                startActivityForResult(intent, GET_IMAGE_CODE);
+        });
+
+        ((Button) findViewById(R.id.))
+
     }
+
+    void uploadFile(){
+        File file = new File(getApplicationContext().getFilesDir(), "Key?");
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.append("content example");
+            writer.close();
+
+            Amplify.Storage.uploadFile(
+                    "Key?",
+                    file,
+                    result -> Log.i("amplifyapp", "upload success: " + result.getKey()),
+                    storageFailure -> Log.e("amplifyapp", "upload failed", storageFailure)
+            );
+        } catch (IOException e) {
+            Log.e("amplifyapp", "upload failed", e);
+            e.printStackTrace();
+        }
+
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("*/*");
+//        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{".jpg", ".png", ".gif"});
+//        startActivityForResult(intent, FILE_UPLOAD_REQUEST_CODE);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_UPLOAD_REQUEST_CODE){
+            File file = new File(getApplicationContext().getFilesDir(), "uploading file");
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                FileUtils.copy(inputStream, new FileOutputStream(file));
+                saveFileToS3(file, "filename");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    void saveFileToS3(File file, String filename){
+        Amplify.Storage.uploadFile(
+                filename,
+                file,
+                r -> {},
+                r -> {}
+        );
+    }
+
+    void downloadFileFromS3(String key){
+        Amplify.Storage.downloadFile(
+                key,
+                new File(getApplicationContext().getFilesDir(), key),
+                r -> {
+                    ImageView imageView = findViewById(R.id.imageViewS3);
+                    imageView.setImageBitmap(BitmapFactory.decodeFile(r.getFile().getPath()));
+                },
+                r -> {});
+                }
+
 }
