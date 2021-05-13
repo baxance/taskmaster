@@ -35,12 +35,14 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.StringJoiner;
 
 public class AddTask extends AppCompatActivity {
 
     static int FILE_UPLOAD_REQUEST_CODE = 123;
     static int GET_IMAGE_CODE = 100;
+    String key;
     File fileToUpload;
 
     public ArrayList<Team> teams = new ArrayList<>();
@@ -94,11 +96,14 @@ public class AddTask extends AppCompatActivity {
             }
             Log.e("team", "team selected = " + teamId);
 
+            saveFileToS3(fileToUpload);
+
             TaskTwo taskTwo = TaskTwo.builder()
                     .title(textTitle)
                     .team(teamId)
                     .body(textBody)
                     .state(textState)
+                    .key(key)
                     .build();
 
             Amplify.API.mutate(
@@ -115,61 +120,40 @@ public class AddTask extends AppCompatActivity {
             intent.setType("*/*");
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{".jpg", ".png", ".gif"});
                 startActivityForResult(intent, GET_IMAGE_CODE);
+
         });
 
-        ((Button) findViewById(R.id.))
-
     }
-
-    void uploadFile(){
-        File file = new File(getApplicationContext().getFilesDir(), "Key?");
-
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.append("content example");
-            writer.close();
-
-            Amplify.Storage.uploadFile(
-                    "Key?",
-                    file,
-                    result -> Log.i("amplifyapp", "upload success: " + result.getKey()),
-                    storageFailure -> Log.e("amplifyapp", "upload failed", storageFailure)
-            );
-        } catch (IOException e) {
-            Log.e("amplifyapp", "upload failed", e);
-            e.printStackTrace();
-        }
-
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("*/*");
-//        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{".jpg", ".png", ".gif"});
-//        startActivityForResult(intent, FILE_UPLOAD_REQUEST_CODE);
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILE_UPLOAD_REQUEST_CODE){
-            File file = new File(getApplicationContext().getFilesDir(), "uploading file");
+        if (requestCode == GET_IMAGE_CODE){
+            fileToUpload = new File(getApplicationContext().getFilesDir(), "uploading");
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                FileUtils.copy(inputStream, new FileOutputStream(file));
-                saveFileToS3(file, "filename");
+                FileUtils.copy(inputStream, new FileOutputStream(fileToUpload));
+
+                ImageView imageView = findViewById(R.id.imageViewS3);
+                imageView.setImageBitmap(BitmapFactory.decodeFile(fileToUpload.getPath()));
+
+                System.out.println("within the activity S3 result");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    void saveFileToS3(File file, String filename){
-        Amplify.Storage.uploadFile(
-                filename,
-                file,
-                r -> {},
-                r -> {}
-        );
+    void saveFileToS3(File file){
+            Random random = new Random();
+
+            Amplify.Storage.uploadFile(
+                    key = random.toString(),
+                    file,
+                    result -> Log.i("amplifyapp", "upload success: " + result.getKey()),
+                    storageFailure -> Log.e("amplifyapp", "upload failed", storageFailure)
+            );
     }
 
     void downloadFileFromS3(String key){

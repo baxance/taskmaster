@@ -25,11 +25,13 @@ public final class TaskTwo implements Model {
   public static final QueryField TITLE = field("TaskTwo", "title");
   public static final QueryField BODY = field("TaskTwo", "body");
   public static final QueryField STATE = field("TaskTwo", "state");
+  public static final QueryField KEY = field("TaskTwo", "key");
   public static final QueryField TEAM = field("TaskTwo", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String") String body;
   private final @ModelField(targetType="String") String state;
+  private final @ModelField(targetType="String") String key;
   private final @ModelField(targetType="Team", isRequired = true) @BelongsTo(targetName = "teamId", type = Team.class) Team team;
   public String getId() {
       return id;
@@ -47,15 +49,20 @@ public final class TaskTwo implements Model {
       return state;
   }
   
+  public String getKey() {
+      return key;
+  }
+  
   public Team getTeam() {
       return team;
   }
   
-  private TaskTwo(String id, String title, String body, String state, Team team) {
+  private TaskTwo(String id, String title, String body, String state, String key, Team team) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.state = state;
+    this.key = key;
     this.team = team;
   }
   
@@ -71,6 +78,7 @@ public final class TaskTwo implements Model {
               ObjectsCompat.equals(getTitle(), taskTwo.getTitle()) &&
               ObjectsCompat.equals(getBody(), taskTwo.getBody()) &&
               ObjectsCompat.equals(getState(), taskTwo.getState()) &&
+              ObjectsCompat.equals(getKey(), taskTwo.getKey()) &&
               ObjectsCompat.equals(getTeam(), taskTwo.getTeam());
       }
   }
@@ -82,6 +90,7 @@ public final class TaskTwo implements Model {
       .append(getTitle())
       .append(getBody())
       .append(getState())
+      .append(getKey())
       .append(getTeam())
       .toString()
       .hashCode();
@@ -95,6 +104,7 @@ public final class TaskTwo implements Model {
       .append("title=" + String.valueOf(getTitle()) + ", ")
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
+      .append("key=" + String.valueOf(getKey()) + ", ")
       .append("team=" + String.valueOf(getTeam()))
       .append("}")
       .toString();
@@ -128,6 +138,7 @@ public final class TaskTwo implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -137,6 +148,7 @@ public final class TaskTwo implements Model {
       title,
       body,
       state,
+      key,
       team);
   }
   public interface TitleStep {
@@ -154,6 +166,7 @@ public final class TaskTwo implements Model {
     BuildStep id(String id) throws IllegalArgumentException;
     BuildStep body(String body);
     BuildStep state(String state);
+    BuildStep key(String key);
   }
   
 
@@ -163,6 +176,7 @@ public final class TaskTwo implements Model {
     private Team team;
     private String body;
     private String state;
+    private String key;
     @Override
      public TaskTwo build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -172,6 +186,7 @@ public final class TaskTwo implements Model {
           title,
           body,
           state,
+          key,
           team);
     }
     
@@ -201,6 +216,12 @@ public final class TaskTwo implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep key(String key) {
+        this.key = key;
+        return this;
+    }
+    
     /** 
      * WARNING: Do not set ID when creating a new object. Leave this blank and one will be auto generated for you.
      * This should only be set when referring to an already existing object.
@@ -224,12 +245,13 @@ public final class TaskTwo implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, String state, Team team) {
+    private CopyOfBuilder(String id, String title, String body, String state, String key, Team team) {
       super.id(id);
       super.title(title)
         .team(team)
         .body(body)
-        .state(state);
+        .state(state)
+        .key(key);
     }
     
     @Override
@@ -250,6 +272,11 @@ public final class TaskTwo implements Model {
     @Override
      public CopyOfBuilder state(String state) {
       return (CopyOfBuilder) super.state(state);
+    }
+    
+    @Override
+     public CopyOfBuilder key(String key) {
+      return (CopyOfBuilder) super.key(key);
     }
   }
   

@@ -10,6 +10,7 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amazonaws.services.securitytoken.model.Tag;
@@ -36,6 +38,7 @@ import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 
@@ -202,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         String taskTitle = task.getTitle();
         String taskBody = task.getBody();
         String taskState = task.getState();
+        String taskImageKey = task.getKey();
 //        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
 //        ArrayList<Task> tasks = (ArrayList<Task>)taskDatabase.taskDao().getTask(taskTitle);
 //        Log.i("task from DB", "task from DB on click = " + tasks);
@@ -209,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         viewTaskDetail.putExtra("taskTitle", taskTitle);
         viewTaskDetail.putExtra("taskBody", taskBody);
         viewTaskDetail.putExtra("taskState", taskState);
+        viewTaskDetail.putExtra("taskImageKey", taskImageKey);
         Log.i("title", "task TITLE = " + taskTitle);
         Log.i("body", "task BODY = " + taskBody);
         Log.i("state", "task STATE = " + taskState);
