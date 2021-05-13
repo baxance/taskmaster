@@ -32,6 +32,7 @@ import com.amplifyframework.auth.options.AuthSignUpOptions;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
+import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 
 import org.w3c.dom.Text;
 
@@ -85,10 +86,11 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         try {
             Amplify.addPlugin(new AWSApiPlugin());
             Amplify.addPlugin(new AWSCognitoAuthPlugin());
+            Amplify.addPlugin(new AWSS3StoragePlugin());
             Amplify.configure(getApplicationContext());
             Log.i("amplify.app","success");
         } catch (AmplifyException e) {
-            Log.e("amplify.app", "error " + e);
+            e.printStackTrace();
         }
 
 
@@ -96,14 +98,6 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                 result -> Log.i("AmplifyQuickstart", result.toString()),
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
-
-
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String username = preferences.getString("username", "Guest");
-//        String userTeam = preferences.getString("userTeam", "");
-//
-//        TextView usernameSet = findViewById(R.id.usernameText);
-//        usernameSet.setText(username + " tasks with " + userTeam);
 
         //////////////////////RECYCLER VIEW/////////////////////////////
         taskRV = findViewById(R.id.recyclerView);

@@ -1,6 +1,6 @@
 {
     "identityPoolName": "taskmastera2beeadb_identitypool_a2beeadb",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "taskmaa2beeadb",
     "userPoolName": "taskmastera2beeadb_userpool_a2beeadb",
     "autoVerifiedAttributes": [
