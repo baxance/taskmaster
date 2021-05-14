@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Query;
 import androidx.room.Room;
 
+import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 
 import com.amazonaws.services.securitytoken.model.Tag;
 import com.amplifyframework.AmplifyException;
+import com.amplifyframework.analytics.AnalyticsEvent;
+import com.amplifyframework.analytics.pinpoint.AWSPinpointAnalyticsPlugin;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
@@ -50,6 +53,11 @@ import java.util.StringJoiner;
 
 public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskListener{
 
+    AnalyticsEvent event = AnalyticsEvent.builder()
+            .name("Home Intent Event")
+            .addProperty("Intents", 1)
+            .build();
+
     public ArrayList<TaskTwo> tasks = new ArrayList<>();
     Handler mainThreadHandler;
     RecyclerView taskRV;
@@ -67,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             Amplify.addPlugin(new AWSApiPlugin());
             Amplify.addPlugin(new AWSCognitoAuthPlugin());
             Amplify.addPlugin(new AWSS3StoragePlugin());
+            Amplify.addPlugin(new AWSPinpointAnalyticsPlugin(getApplication()));
             Amplify.configure(getApplicationContext());
             Log.i("amplify.app","success");
         } catch (AmplifyException e) {
@@ -77,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                 result -> Log.i("AmplifyQuickstart", result.toString()),
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
+
+
 
         //////////////////////RECYCLER VIEW/////////////////////////////
         taskRV = findViewById(R.id.recyclerView);
@@ -122,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             @Override
             public void onClick (View v){
                 Intent goToAddTaskIntent = new Intent(MainActivity.this, AddTask.class);
+                Amplify.Analytics.recordEvent(event);
                 startActivity(goToAddTaskIntent);
             }
         });
@@ -131,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             @Override
                 public void onClick(View v){
                 Intent goToViewTasksIntent = new Intent(MainActivity.this, ViewTask.class);
+                Amplify.Analytics.recordEvent(event);
                 startActivity(goToViewTasksIntent);
             }
         });
@@ -140,17 +153,20 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             @Override
             public void onClick(View v){
                 Intent goToViewTasksIntent = new Intent(MainActivity.this, Settings.class);
+                Amplify.Analytics.recordEvent(event);
                 startActivity(goToViewTasksIntent);
             }
         });
 
         ((Button) findViewById(R.id.signupPageButton)).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CognitoSignupActivity.class);
+            Amplify.Analytics.recordEvent(event);
             startActivity(intent);
         });
 
         ((Button) findViewById(R.id.loginPageButton)).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CognitoLoginActivity.class);
+            Amplify.Analytics.recordEvent(event);
             startActivity(intent);
         });
 
@@ -160,23 +176,10 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                     error -> Log.e("Auth", error.toString())
             );
             finish();
+            Amplify.Analytics.recordEvent(event);
             startActivity(getIntent());
         });
 
-//            FirebaseMessaging.getInstance().getToken()
-//                    .addOnCompleteListener(new OnCompleteListener<String>() {
-//                        @Override
-//                        public void onComplete(@NonNull @NotNull Task<String> task) {
-//                            if (!task.isSuccessful()) {
-//                                Log.w(TAG,"Fetching FCM registration token failed", task.getException());
-//                                return;
-//                            }
-//                            String token = task.getResult();
-//                            String message = getString(R.string.message_token_fmt, token); // WEWHASTG THE FUCK IS MESSAGE_TOKEN_FMT THAT IS IN EVERY FUCKING DOC ASSOCIATED WITH THIS DOGSHIT SERVICE AND WHY THE FUYCK DOESN T IT WORK
-//                            Log.d(TAG, message);
-//                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
 
     }
 
@@ -208,11 +211,10 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         Log.i("title", "task TITLE = " + taskTitle);
         Log.i("body", "task BODY = " + taskBody);
         Log.i("state", "task STATE = " + taskState);
+        Amplify.Analytics.recordEvent(event);
         startActivity(viewTaskDetail);
         Log.i("task listener", "here " + task.getBody());
     }
-
-
 
     void registerFirebase(){
         FirebaseMessaging.getInstance().getToken()

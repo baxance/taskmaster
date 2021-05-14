@@ -8,11 +8,17 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.auth.AuthUserAttributeKey;
 import com.amplifyframework.auth.options.AuthSignUpOptions;
 import com.amplifyframework.core.Amplify;
 
 public class CognitoSignupActivity extends AppCompatActivity {
+
+    AnalyticsEvent event = AnalyticsEvent.builder()
+            .name("Signup Event")
+            .addProperty("Intents", 1)
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,7 @@ public class CognitoSignupActivity extends AppCompatActivity {
                             .build(),
                     r -> {
                         Intent intent = new Intent(CognitoSignupActivity.this, CognitoSignupConfirmationActivity.class);
+                        Amplify.Analytics.recordEvent(event);
                         intent.putExtra("username", username);
                         startActivity(intent);
                     },

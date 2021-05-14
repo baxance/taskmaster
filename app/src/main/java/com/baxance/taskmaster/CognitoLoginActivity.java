@@ -11,11 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.core.Amplify;
 
 public class CognitoLoginActivity extends AppCompatActivity {
 
     Handler loginHandler;
+
+    AnalyticsEvent event = AnalyticsEvent.builder()
+            .name("Login Event")
+            .addProperty("Intents", 1)
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,7 @@ public class CognitoLoginActivity extends AppCompatActivity {
                 if (message.what == 1){
                     Log.i("login activity", "login success");
                     Toast.makeText(CognitoLoginActivity.this, "logged in", Toast.LENGTH_LONG).show();
+                    Amplify.Analytics.recordEvent(event);
                     Intent intent = new Intent(CognitoLoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (message.what == 2){
