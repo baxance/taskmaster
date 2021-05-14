@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "664015307488",
+    "project_id": "taskmaster-8488a",
+    "storage_bucket": "taskmaster-8488a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664015307488:android:cad16a9e1c2e7600384685",
+        "android_client_info": {
+          "package_name": "com.baxance.taskmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664015307488-v915sjg4kl0a65e01uidfc3pjjhjqpqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4iiSyFa2A4ixtCYPLx402bnqi2AIi-Mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664015307488-v915sjg4kl0a65e01uidfc3pjjhjqpqj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
