@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
@@ -48,6 +49,12 @@ public class AddTask extends AppCompatActivity {
     public ArrayList<Team> teams = new ArrayList<>();
     Handler mainThreadHandler;
 
+    AnalyticsEvent event = AnalyticsEvent.builder()
+            .name("Add Task Event")
+            .addProperty("Intents", 1)
+            .build();
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,7 @@ public class AddTask extends AppCompatActivity {
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
             Intent goToAddTaskIntent = new Intent(AddTask.this, MainActivity.class);
+            Amplify.Analytics.recordEvent(event);
             startActivity(goToAddTaskIntent);
         });
 
@@ -118,6 +126,7 @@ public class AddTask extends AppCompatActivity {
         ((Button) findViewById(R.id.selectImageButton)).setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
+            Amplify.Analytics.recordEvent(event);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{".jpg", ".png", ".gif"});
                 startActivityForResult(intent, GET_IMAGE_CODE);
 

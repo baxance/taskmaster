@@ -10,9 +10,16 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
+import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Team;
 
 public class Settings extends AppCompatActivity {
+
+    AnalyticsEvent event = AnalyticsEvent.builder()
+            .name("Settings Event")
+            .addProperty("Intents", 1)
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class Settings extends AppCompatActivity {
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
             Intent goToAddTaskIntent = new Intent(Settings.this, MainActivity.class);
+            Amplify.Analytics.recordEvent(event);
             startActivity(goToAddTaskIntent);
         });
 

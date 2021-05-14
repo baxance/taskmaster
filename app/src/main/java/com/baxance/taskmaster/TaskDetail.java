@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
@@ -65,6 +66,11 @@ public class TaskDetail extends AppCompatActivity {
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
             Intent goToAddTaskIntent = new Intent(TaskDetail.this, MainActivity.class);
+            AnalyticsEvent event = AnalyticsEvent.builder()
+                    .name("add task intent Event")
+                    .addProperty("Intents", 1)
+                    .build();
+            Amplify.Analytics.recordEvent(event);
             startActivity(goToAddTaskIntent);
         });
     }
