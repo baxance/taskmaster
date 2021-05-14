@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.services.securitytoken.model.Tag;
 import com.amplifyframework.AmplifyException;
@@ -35,7 +36,12 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -50,41 +56,12 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
 
     public static String TAG = "main activity";
 
-//    void signupCognito(){
-//        Amplify.Auth.signUp(
-//                "banance7@gmail.com",
-//                "password",
-//                AuthSignUpOptions.builder()
-//                        .userAttribute(AuthUserAttributeKey.email(),"banance7@gmail.com")
-//                        .userAttribute(AuthUserAttributeKey.nickname(), "barrett")
-//                        .build(),
-//                r -> Log.i(TAG, "signup success " + r.toString()),
-//                r -> Log.i(TAG, "signup fail " + r.toString())
-//        );
-//    }
-//
-//    void signupConfirm(String username, String confNum){
-//        Amplify.Auth.confirmSignUp(
-//                username,
-//                confNum,
-//                r -> Log.i(TAG, "signupConfirm: " + r.toString()),
-//                r -> Log.i(TAG, "signupConfirm: " + r.toString())
-//        );
-//    }
-//
-//    void loginCognito(String username, String password) {
-//        Amplify.Auth.signIn(
-//                username,
-//                password,
-//                r -> Log.i(TAG, "loginCognito success: " + r.toString()),
-//                r -> Log.i(TAG, "loginCognito failure: " + r.toString())
-//        );
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        registerFirebase();
 
         try {
             Amplify.addPlugin(new AWSApiPlugin());
@@ -95,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         } catch (AmplifyException e) {
             e.printStackTrace();
         }
-
 
         Amplify.Auth.fetchAuthSession(
                 result -> Log.i("AmplifyQuickstart", result.toString()),
@@ -187,6 +163,21 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             startActivity(getIntent());
         });
 
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG,"Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+                            String token = task.getResult();
+                            String message = getString(R.string.message_token_fmt, token); // WEWHASTG THE FUCK IS MESSAGE_TOKEN_FMT THAT IS IN EVERY FUCKING DOC ASSOCIATED WITH THIS DOGSHIT SERVICE AND WHY THE FUYCK DOESN T IT WORK
+                            Log.d(TAG, message);
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
     }
 
     @Override
@@ -221,4 +212,22 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         Log.i("task listener", "here " + task.getBody());
     }
 
+
+
+    void registerFirebase(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG,"Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        String message = getString(R.string., token);
+                        Log.d(TAG, message);
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }
