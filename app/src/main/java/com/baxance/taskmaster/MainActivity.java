@@ -163,20 +163,20 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
             startActivity(getIntent());
         });
 
-            FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG,"Fetching FCM registration token failed", task.getException());
-                                return;
-                            }
-                            String token = task.getResult();
-                            String message = getString(R.string.message_token_fmt, token); // WEWHASTG THE FUCK IS MESSAGE_TOKEN_FMT THAT IS IN EVERY FUCKING DOC ASSOCIATED WITH THIS DOGSHIT SERVICE AND WHY THE FUYCK DOESN T IT WORK
-                            Log.d(TAG, message);
-                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+//            FirebaseMessaging.getInstance().getToken()
+//                    .addOnCompleteListener(new OnCompleteListener<String>() {
+//                        @Override
+//                        public void onComplete(@NonNull @NotNull Task<String> task) {
+//                            if (!task.isSuccessful()) {
+//                                Log.w(TAG,"Fetching FCM registration token failed", task.getException());
+//                                return;
+//                            }
+//                            String token = task.getResult();
+//                            String message = getString(R.string.message_token_fmt, token); // WEWHASTG THE FUCK IS MESSAGE_TOKEN_FMT THAT IS IN EVERY FUCKING DOC ASSOCIATED WITH THIS DOGSHIT SERVICE AND WHY THE FUYCK DOESN T IT WORK
+//                            Log.d(TAG, message);
+//                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
 
     }
 
@@ -218,15 +218,16 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
-                    public void onComplete(@NonNull @NotNull Task<String> task) {
+                    public void onComplete(@NonNull Task<String> task) {
                         if (!task.isSuccessful()) {
                             Log.w(TAG,"Fetching FCM registration token failed", task.getException());
                             return;
                         }
                         String token = task.getResult();
-                        String message = getString(R.string., token);
-                        Log.d(TAG, message);
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Log.i("firebase", token);
+//                        String message = getString(R.string., token);
+//                        Log.d(TAG, message);
+                        Toast.makeText(getApplicationContext(), "POPUP MESSAGE FOR LAB 38", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
