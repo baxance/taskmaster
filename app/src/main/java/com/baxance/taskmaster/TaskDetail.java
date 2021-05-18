@@ -48,10 +48,12 @@ public class TaskDetail extends AppCompatActivity {
             String body = intent.getStringExtra("taskBody");
             String state = intent.getStringExtra("taskState");
             String imageKey = intent.getStringExtra("taskImageKey");
+            String address = intent.getStringExtra("taskAddress");
             Log.i(TAG, "onCreate: " + title);
             ((TextView)findViewById(R.id.taskTitle)).setText(title);
             ((TextView)findViewById(R.id.taskBody)).setText(body);
             ((TextView)findViewById(R.id.taskState)).setText(state);
+            ((TextView)findViewById(R.id.taskAddress)).setText(address);
 //            ((ImageView)findViewById(R.id.taskImageViewS3)).setImageBitmap();
             Amplify.Storage.downloadFile(
                     imageKey,

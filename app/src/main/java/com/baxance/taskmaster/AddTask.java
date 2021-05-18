@@ -1,12 +1,19 @@
 package com.baxance.taskmaster;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.room.Database;
 import androidx.room.Room;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +34,16 @@ import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,6 +56,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.StringJoiner;
 
@@ -48,8 +67,13 @@ public class AddTask extends AppCompatActivity {
     String key;
     File fileToUpload;
 
+    FusedLocationProviderClient fusedLocationClient;
+    Geocoder geocoder;
+
     public ArrayList<Team> teams = new ArrayList<>();
     Handler mainThreadHandler;
+
+    List<Address> addresses;
 
     AnalyticsEvent event = AnalyticsEvent.builder()
             .name("Add Task Event")
@@ -65,29 +89,22 @@ public class AddTask extends AppCompatActivity {
 
         intentFilterData();
 
-//        Intent foreignIntent = getIntent();
-//        if (foreignIntent.getType().startsWith("image/")){
-//
-//
-//        }
-//
-//
-//
-//        if (getIntent().getData() != null){
-//            try {
-//                System.out.println("in the intent filter try");
-//                Uri uri = getIntent().getData();
-//                InputStream inputStream = getContentResolver().openInputStream(uri);
-//                ImageView imageView = (ImageView) findViewById(R.id.imageViewS3);
-//                imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
+        requestLocationPermissions();
+        loadLocationProviderClientAndGeocoder();
+        getCurrentLocation();
+        locationUpdates();
 
-//            Uri data = (Uri) foreignIntent.getParcelableExtra(Intent.EXTRA_STREAM);
-//            ImageView imageView = findViewById(R.id.imageViewS3);
-//            imageView.setImageURI(data);
-//        }
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//        fusedLocationClient.getLastLocation()
+//                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        if (location != null) {
+//
+//                        }
+//                    }
+//                });
 
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
@@ -140,6 +157,7 @@ public class AddTask extends AppCompatActivity {
                     .body(textBody)
                     .state(textState)
                     .key(key)
+                    .address(addresses.get(0).getAddressLine(0))
                     .build();
 
             Amplify.API.mutate(
@@ -206,10 +224,12 @@ public class AddTask extends AppCompatActivity {
 
     void intentFilterData(){
         Intent intent = getIntent();
-        if (intent.getType().startsWith("image/")){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                loadImageFromIntent(uri);
+        if (intent.getType() != null) {
+            if (intent.getType().startsWith("image/")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    loadImageFromIntent(uri);
+                }
             }
         }
     }
@@ -229,5 +249,92 @@ public class AddTask extends AppCompatActivity {
 
     }
 
+    void requestLocationPermissions(){
+        requestPermissions(
+                new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                },
+                1
+        );
+    }
 
+    void loadLocationProviderClientAndGeocoder(){
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+    }
+
+    void getCurrentLocation(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.i("get current location", "permission not granted");
+            return;
+        }
+        fusedLocationClient.flushLocations();
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+            @Override
+            public boolean isCancellationRequested() {
+                return false;
+            }
+
+            @NonNull
+            @NotNull
+            @Override
+            public CancellationToken onCanceledRequested(@NonNull @NotNull OnTokenCanceledListener onTokenCanceledListener) {
+                return null;
+            }
+        })
+                .addOnCompleteListener(
+                        data -> {
+                            Log.i("location", "on complete: " + data.toString());
+                        }
+                )
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        Log.i("location", "on success: " + location.toString());
+                        try {
+                            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
+                            Log.i("Address", "current address: " + addresses.toString());
+                            String streetAddress = addresses.get(0).getAddressLine(0);
+                            Log.i("Address", "current location: " + streetAddress);
+                        } catch (IOException e) {
+                            Log.e("address", "get current location: failed");
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .addOnCanceledListener(() -> Log.i("fldkirughb", "onCanceled: canceled"))
+                .addOnFailureListener(error -> Log.i("fldkirughb", "onFailure: " + error.toString()));
+    }
+
+    void locationUpdates(){
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull @NotNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                try {
+                    String address = geocoder.getFromLocation(
+                            locationResult.getLastLocation().getLatitude(),
+                            locationResult.getLastLocation().getLongitude(),
+                            1
+                    ).get(0).getAddressLine(0);
+                    Log.i("updates", "location resules subscribed: " + address);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+    }
 }

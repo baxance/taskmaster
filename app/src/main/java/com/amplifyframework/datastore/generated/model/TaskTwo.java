@@ -26,12 +26,14 @@ public final class TaskTwo implements Model {
   public static final QueryField BODY = field("TaskTwo", "body");
   public static final QueryField STATE = field("TaskTwo", "state");
   public static final QueryField KEY = field("TaskTwo", "key");
+  public static final QueryField ADDRESS = field("TaskTwo", "address");
   public static final QueryField TEAM = field("TaskTwo", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String") String body;
   private final @ModelField(targetType="String") String state;
   private final @ModelField(targetType="String") String key;
+  private final @ModelField(targetType="String") String address;
   private final @ModelField(targetType="Team", isRequired = true) @BelongsTo(targetName = "teamId", type = Team.class) Team team;
   public String getId() {
       return id;
@@ -53,16 +55,21 @@ public final class TaskTwo implements Model {
       return key;
   }
   
+  public String getAddress() {
+      return address;
+  }
+  
   public Team getTeam() {
       return team;
   }
   
-  private TaskTwo(String id, String title, String body, String state, String key, Team team) {
+  private TaskTwo(String id, String title, String body, String state, String key, String address, Team team) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.state = state;
     this.key = key;
+    this.address = address;
     this.team = team;
   }
   
@@ -79,6 +86,7 @@ public final class TaskTwo implements Model {
               ObjectsCompat.equals(getBody(), taskTwo.getBody()) &&
               ObjectsCompat.equals(getState(), taskTwo.getState()) &&
               ObjectsCompat.equals(getKey(), taskTwo.getKey()) &&
+              ObjectsCompat.equals(getAddress(), taskTwo.getAddress()) &&
               ObjectsCompat.equals(getTeam(), taskTwo.getTeam());
       }
   }
@@ -91,6 +99,7 @@ public final class TaskTwo implements Model {
       .append(getBody())
       .append(getState())
       .append(getKey())
+      .append(getAddress())
       .append(getTeam())
       .toString()
       .hashCode();
@@ -105,6 +114,7 @@ public final class TaskTwo implements Model {
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
       .append("key=" + String.valueOf(getKey()) + ", ")
+      .append("address=" + String.valueOf(getAddress()) + ", ")
       .append("team=" + String.valueOf(getTeam()))
       .append("}")
       .toString();
@@ -139,6 +149,7 @@ public final class TaskTwo implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -149,6 +160,7 @@ public final class TaskTwo implements Model {
       body,
       state,
       key,
+      address,
       team);
   }
   public interface TitleStep {
@@ -167,6 +179,7 @@ public final class TaskTwo implements Model {
     BuildStep body(String body);
     BuildStep state(String state);
     BuildStep key(String key);
+    BuildStep address(String address);
   }
   
 
@@ -177,6 +190,7 @@ public final class TaskTwo implements Model {
     private String body;
     private String state;
     private String key;
+    private String address;
     @Override
      public TaskTwo build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -187,6 +201,7 @@ public final class TaskTwo implements Model {
           body,
           state,
           key,
+          address,
           team);
     }
     
@@ -222,6 +237,12 @@ public final class TaskTwo implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep address(String address) {
+        this.address = address;
+        return this;
+    }
+    
     /** 
      * WARNING: Do not set ID when creating a new object. Leave this blank and one will be auto generated for you.
      * This should only be set when referring to an already existing object.
@@ -245,13 +266,14 @@ public final class TaskTwo implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, String state, String key, Team team) {
+    private CopyOfBuilder(String id, String title, String body, String state, String key, String address, Team team) {
       super.id(id);
       super.title(title)
         .team(team)
         .body(body)
         .state(state)
-        .key(key);
+        .key(key)
+        .address(address);
     }
     
     @Override
@@ -277,6 +299,11 @@ public final class TaskTwo implements Model {
     @Override
      public CopyOfBuilder key(String key) {
       return (CopyOfBuilder) super.key(key);
+    }
+    
+    @Override
+     public CopyOfBuilder address(String address) {
+      return (CopyOfBuilder) super.address(address);
     }
   }
   

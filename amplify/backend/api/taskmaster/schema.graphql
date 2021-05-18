@@ -13,5 +13,7 @@ type TaskTwo
   body: String
   state: String
   key: String
+  address: String
   team: Team! @connection(fields : ["teamId"])
+
 }
