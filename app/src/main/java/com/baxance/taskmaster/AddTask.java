@@ -7,6 +7,8 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
@@ -28,6 +30,7 @@ import com.amplifyframework.datastore.generated.model.Team;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,7 +44,6 @@ import java.util.StringJoiner;
 
 public class AddTask extends AppCompatActivity {
 
-    static int FILE_UPLOAD_REQUEST_CODE = 123;
     static int GET_IMAGE_CODE = 100;
     String key;
     File fileToUpload;
@@ -60,6 +62,32 @@ public class AddTask extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        intentFilterData();
+
+//        Intent foreignIntent = getIntent();
+//        if (foreignIntent.getType().startsWith("image/")){
+//
+//
+//        }
+//
+//
+//
+//        if (getIntent().getData() != null){
+//            try {
+//                System.out.println("in the intent filter try");
+//                Uri uri = getIntent().getData();
+//                InputStream inputStream = getContentResolver().openInputStream(uri);
+//                ImageView imageView = (ImageView) findViewById(R.id.imageViewS3);
+//                imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+
+//            Uri data = (Uri) foreignIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+//            ImageView imageView = findViewById(R.id.imageViewS3);
+//            imageView.setImageURI(data);
+//        }
 
         Button home = findViewById(R.id.homeButton);
         home.setOnClickListener(view -> {
@@ -175,5 +203,31 @@ public class AddTask extends AppCompatActivity {
                 },
                 r -> {});
                 }
+
+    void intentFilterData(){
+        Intent intent = getIntent();
+        if (intent.getType().startsWith("image/")){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                loadImageFromIntent(uri);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    void loadImageFromIntent(Uri uri){
+        fileToUpload = new File(getApplicationContext().getFilesDir(), "tempFile");
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            FileUtils.copy(inputStream, new FileOutputStream(fileToUpload));
+
+            ImageView imageView = findViewById(R.id.imageViewS3);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(fileToUpload.getPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
