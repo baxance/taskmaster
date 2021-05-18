@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         String taskBody = task.getBody();
         String taskState = task.getState();
         String taskImageKey = task.getKey();
+        String taskAddress = task.getAddress();
 //        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "taskDatabase").allowMainThreadQueries().build();
 //        ArrayList<Task> tasks = (ArrayList<Task>)taskDatabase.taskDao().getTask(taskTitle);
 //        Log.i("task from DB", "task from DB on click = " + tasks);
@@ -208,9 +209,11 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
         viewTaskDetail.putExtra("taskBody", taskBody);
         viewTaskDetail.putExtra("taskState", taskState);
         viewTaskDetail.putExtra("taskImageKey", taskImageKey);
+        viewTaskDetail.putExtra("taskAddress", taskAddress);
         Log.i("title", "task TITLE = " + taskTitle);
         Log.i("body", "task BODY = " + taskBody);
         Log.i("state", "task STATE = " + taskState);
+        Log.i("address", "task ADDRESS = " + taskAddress);
         Amplify.Analytics.recordEvent(event);
         startActivity(viewTaskDetail);
         Log.i("task listener", "here " + task.getBody());
