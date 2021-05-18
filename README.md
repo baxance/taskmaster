@@ -37,6 +37,15 @@ View Task page with a button to return to the Home Page and a big block of purpl
 5/14 AWS Analytics dashboard showing stuff is recorded
 ![View tasks](screenshots/aws-analytics-dashboard.PNG)
 
+5/18 images shareable to App
+![View tasks](screenshots/share_image.PNG)
+
+5/18 shared image preloaded on app AddTask
+![View tasks](screenshots/share_display_addtask.PNG)
+
+5/18 shared image saved to DB and recallable on TaskDetail
+![View tasks](screenshots/share_taskdetail.PNG)
+
 5/4 Espresso tests built
 - first checks for UI elements on home page
 - second simulates adding a new task, selecting it from the home page and checking that the contents on the details page match what was entered
