@@ -39,6 +39,12 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.TaskTwo;
 import com.amplifyframework.datastore.generated.model.Team;
 import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -71,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
 
         registerFirebase();
 
+        initializeAds();
+
         try {
             Amplify.addPlugin(new AWSApiPlugin());
             Amplify.addPlugin(new AWSCognitoAuthPlugin());
@@ -87,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
 
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(@NonNull @NotNull InitializationStatus initializationStatus) {
+            }
+        });
 
 
         //////////////////////RECYCLER VIEW/////////////////////////////
@@ -235,5 +248,16 @@ public class MainActivity extends AppCompatActivity implements ViewAdapter.TaskL
                         Toast.makeText(getApplicationContext(), "POPUP MESSAGE FOR LAB 38", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    void initializeAds(){
+        AdView adView;
+        MobileAds.initialize(getApplicationContext());
+        adView = findViewById(R.id.adView2);
+//        adView.setAdSize(AdSize.BANNER);
+//        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+        System.out.println("intializeAds method called");
     }
 }

@@ -49,6 +49,9 @@ View Task page with a button to return to the Home Page and a big block of purpl
 5/18 Address saved with AddTask, displayed on TaskDetail
 ![View tasks](screenshots/address.PNG)
 
+5/19 Banner ad added to MainActivity
+![View tasks](screenshots/banner_add.PNG)
+
 5/4 Espresso tests built
 - first checks for UI elements on home page
 - second simulates adding a new task, selecting it from the home page and checking that the contents on the details page match what was entered
